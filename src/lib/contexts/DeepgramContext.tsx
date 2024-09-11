@@ -31,7 +31,7 @@ const getApiKey = async (): Promise<string> => {
   return result.key;
 };
 
-const DeepgramContextProvider: FunctionComponent<DeepgramContextProviderProps> = ({ children }) => {
+export const DeepgramContextProvider: FunctionComponent<DeepgramContextProviderProps> = ({ children }) => {
   const [connection, setConnection] = useState<WebSocket | null>(null);
   const [connectionState, setConnectionState] = useState<SOCKET_STATES>(SOCKET_STATES.closed);
   const [realtimeTranscript, setRealtimeTranscript] = useState("");
@@ -119,7 +119,7 @@ const DeepgramContextProvider: FunctionComponent<DeepgramContextProviderProps> =
 // Use the useDeepgram hook to access the deepgram context and use the deepgram in any component.
 // This allows you to connect to the deepgram and disconnect from the deepgram via a socket.
 // Make sure to wrap your application in a DeepgramContextProvider to use the deepgram.
-function useDeepgram(): DeepgramContextType {
+export function useDeepgram() {
   const context = useContext(DeepgramContext);
   if (context === undefined) {
     throw new Error("useDeepgram must be used within a DeepgramContextProvider");
@@ -127,10 +127,5 @@ function useDeepgram(): DeepgramContextType {
   return context;
 }
 
-export {
-  DeepgramContextProvider,
-  useDeepgram,
-  SOCKET_STATES,
-  LiveTranscriptionEvents,
-  type LiveTranscriptionEvent,
-};
+export { SOCKET_STATES, LiveTranscriptionEvents };
+export type { LiveTranscriptionEvent };
