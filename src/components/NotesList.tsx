@@ -28,20 +28,20 @@ export default function NotesList() {
   }, []);
 
   if (error) {
-    return <div className="text-red-500">{error}</div>;
+    return <div className="text-red-500 dark:text-red-400">{error}</div>;
   }
 
   return (
     <div className="w-full max-w-md mt-8">
-      <h2 className="text-2xl font-bold mb-4">Your Notes</h2>
+      <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Your Notes</h2>
       {notes.length === 0 ? (
-        <p>No notes yet. Start recording to create your first note!</p>
+        <p className="text-gray-700 dark:text-gray-300">No notes yet. Start recording to create your first note!</p>
       ) : (
         <div className="space-y-4">
           {notes.map((note) => (
-            <div key={note.id} className="bg-white p-4 rounded-lg shadow">
-              <p className="text-sm text-gray-500">{new Date(note.timestamp).toLocaleString()}</p>
-              <p className="mt-2">{note.text}</p>
+            <div key={note.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
+              <p className="text-sm text-gray-500 dark:text-gray-400">{new Date(note.timestamp).toLocaleString()}</p>
+              <p className="mt-2 text-gray-900 dark:text-gray-100">{note.text}</p>
             </div>
           ))}
         </div>

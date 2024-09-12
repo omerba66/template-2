@@ -26,6 +26,13 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+/* Add these new styles for better dark mode support */
+@layer base {
+  body {
+    @apply text-gray-900 bg-gray-100 dark:text-gray-100 dark:bg-gray-900;
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

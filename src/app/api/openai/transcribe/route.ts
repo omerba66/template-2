@@ -1,38 +1,33 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
 import OpenAI from "openai";
 
 const openai = new OpenAI();
 
 export async function POST(req: Request) {
-  const body = await req.json();
-
-  const base64Audio = body.audio;
-
-  // Convert the base64 audio data to a Buffer
-  const audio = Buffer.from(base64Audio, "base64");
-
-  // Define the file path for storing the temporary WAV file
-  const filePath = "tmp/input.wav";
-
+  console.log("Transcription API route called");
   try {
-    // Write the audio data to a temporary WAV file synchronously
-    fs.writeFileSync(filePath, audio);
+    const formData = await req.formData();
+    const file = formData.get('file') as File;
 
-    // Create a readable stream from the temporary WAV file
-    const readStream = fs.createReadStream(filePath);
+    if (!file) {
+      console.error("No file provided in the request");
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
 
-    const data = await openai.audio.transcriptions.create({
-      file: readStream,
+    console.log(`Received file: ${file.name}, Size: ${file.size} bytes`);
+
+    const transcription = await openai.audio.transcriptions.create({
+      file: file,
       model: "whisper-1",
     });
 
-    // Remove the temporary file after successful processing
-    fs.unlinkSync(filePath);
-
-    return NextResponse.json(data);
+    console.log("Transcription successful");
+    return NextResponse.json({ text: transcription.text });
   } catch (error) {
-    console.error("Error processing audio:", error);
-    return NextResponse.error();
+    console.error("Error transcribing audio:", error);
+    if (error instanceof Error) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 });
   }
 }
